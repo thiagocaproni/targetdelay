@@ -14,34 +14,42 @@ class DataPre:
         df['timestamp'] = df['timestamp'].astype(int)
         df.set_index('timestamp', inplace=True)
             
-    def loadDataSet(self, path32_int, path64_int, path32_dash, path64_dash):
+    def loadDataSet(self, path20_int, path40_int, path80_int, path20_dash, path40_dash, path80_dash):
         
-        df32_dash = pd.read_csv(path32_dash, sep = ';')
-        df32_int = pd.read_csv(path32_int, sep = ',')
+        df20_dash = pd.read_csv(path20_dash, sep = ';')
+        df20_int = pd.read_csv(path20_int, sep = ',')
         
-        df64_dash = pd.read_csv(path64_dash, sep = ';')
-        df64_int = pd.read_csv(path64_int, sep = ',')
+        df40_dash = pd.read_csv(path40_dash, sep = ';')
+        df40_int = pd.read_csv(path40_int, sep = ',')
         
-        self.transformTimeStamp(df32_dash)
-        self.transformTimeStamp(df64_dash)
+        df80_dash = pd.read_csv(path80_dash, sep = ';')
+        df80_int = pd.read_csv(path80_int, sep = ',')
         
-        df32_int = df32_int.loc[df32_int.groupby('timestamp')['deq_timedelta1'].idxmax()]
-        df64_int = df64_int.loc[df64_int.groupby('timestamp')['deq_timedelta1'].idxmax()]
+        self.transformTimeStamp(df20_dash)
+        self.transformTimeStamp(df40_dash)
+        self.transformTimeStamp(df80_dash)
+        
+        df20_int = df20_int.loc[df20_int.groupby('timestamp')['deq_timedelta1'].idxmax()]
+        df40_int = df40_int.loc[df40_int.groupby('timestamp')['deq_timedelta1'].idxmax()]
+        df80_int = df80_int.loc[df80_int.groupby('timestamp')['deq_timedelta1'].idxmax()]
         
         #df32_int = df32_int.drop_duplicates(subset=['timestamp'])
         #df64_int = df64_int.drop_duplicates(subset=['timestamp'])
         
-        df32_int.set_index('timestamp', inplace=True)
-        df64_int.set_index('timestamp', inplace=True)
+        df20_int.set_index('timestamp', inplace=True)
+        df40_int.set_index('timestamp', inplace=True)
+        df80_int.set_index('timestamp', inplace=True)
         
         
-        merged32_df = pd.merge(df32_int, df32_dash, left_index=True, right_index=True).reset_index()
-        merged64_df = pd.merge(df64_int, df64_dash, left_index=True, right_index=True).reset_index()
+        merged20_df = pd.merge(df20_int, df20_dash, left_index=True, right_index=True).reset_index()
+        merged40_df = pd.merge(df40_int, df40_dash, left_index=True, right_index=True).reset_index()
+        merged80_df = pd.merge(df80_int, df80_dash, left_index=True, right_index=True).reset_index()
         
-        merged64_df['q_size'] = 1
-        merged32_df['q_size'] = 0
+        merged80_df['q_size'] = 2
+        merged40_df['q_size'] = 1
+        merged20_df['q_size'] = 0
         
-        self.dataset = pd.concat([merged32_df, merged64_df], ignore_index=True)
+        self.dataset = pd.concat([merged20_df, merged40_df, merged80_df], ignore_index=True)
 
     def hotEncode(self):
         #creating instance of one-hot-encoder
