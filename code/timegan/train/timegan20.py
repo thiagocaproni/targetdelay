@@ -19,17 +19,19 @@ sys.path.insert(0, '../../data_process')
 from my_data_pre_intdash import DataPre
 
 
-
 # In[8]:
 
 
 def loadDp(random):
     dp = DataPre()
     
-    dp.loadDataSet(path32_int='../../../datasets/log_INT_TD-32_100.csv', 
-                   path64_int='../../../datasets/log_INT_TD-64_100.csv', 
-                   path32_dash='../../../datasets/dash_TD-32_100.csv', 
-                   path64_dash='../../../datasets/dash_TD-64_100.csv')
+    dp.loadDataSet(path20_int="../../../datasets/log_INT_20ms.csv", 
+                   path40_int="../../../datasets/log_INT_40ms.csv", 
+                   path80_int="../../../datasets/log_INT_80ms.csv", 
+                   path20_dash="../../../datasets/dash_20ms.csv", 
+                   path40_dash="../../../datasets/dash_40ms.csv", 
+                   path80_dash="../../../datasets/dash_80ms.csv")
+    
     
     sorted_cols  = ['enq_qdepth1','deq_timedelta1', 'deq_qdepth1',
                     ' enq_qdepth2', ' deq_timedelta2', ' deq_qdepth2',
@@ -60,7 +62,7 @@ def train(dp, seq_len, n_seq, hidden_dim, noise_dim, dim, batch_size, clas, mode
     processed_data = real_data_loading(dp.processed_data.values, seq_len=seq_len)
     
     synth = TimeGAN(model_parameters=gan_args, hidden_dim=hidden_dim, seq_len=seq_len, n_seq=n_seq, gamma=1)
-    synth.train(processed_data, train_steps=50)
+    synth.train(processed_data, train_steps=3000)
     synth.save(model)
 
 
@@ -86,8 +88,8 @@ print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
 
 try:
   # Specify an invalid GPU device
-  with tf.device('/device:GPU:0'):
-    for i in range(0,3):
+  with tf.device('/device:GPU:1'):
+    for i in range(0,1):
       for j in range(0,3):
         for k in range(0,3):
           train(dp,
@@ -96,10 +98,9 @@ try:
             hidden_dim=(20*(j)+20), 
             noise_dim=32, 
             dim=128, 
-            batch_size=(28*(k) + 100), 
+            batch_size=(28*(k) + 100),  
             clas=0, 
-            model=str('../saved_models/so32_seqlen_'+ str((50*(i) + 50)) + '_hidim_' + str(20*(j)+20) + '_batch_' +  str(28*(k) + 100) + '.pkl'))
+            model=str('../saved_models/so20_seqlen_'+ str((50*(i) + 50)) + '_hidim_' + str(20*(j)+20) + '_batch_' +  str(28*(k) + 100) + '.pkl'))
 except RuntimeError as e:
   print(e)
-
 

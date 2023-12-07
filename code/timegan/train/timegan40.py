@@ -24,10 +24,14 @@ from my_data_pre_intdash import DataPre
 
 def loadDp(random):
     dp = DataPre()
-    dp.loadDataSet(path32_int='../../../datasets/log_INT_TD-32_100.csv', 
-                   path64_int='../../../datasets/log_INT_TD-64_100.csv', 
-                   path32_dash='../../../datasets/dash_TD-32_100.csv', 
-                   path64_dash='../../../datasets/dash_TD-64_100.csv')
+    
+    dp.loadDataSet(path20_int="../../../datasets/log_INT_20ms.csv", 
+                   path40_int="../../../datasets/log_INT_40ms.csv", 
+                   path80_int="../../../datasets/log_INT_80ms.csv", 
+                   path20_dash="../../../datasets/dash_20ms.csv", 
+                   path40_dash="../../../datasets/dash_40ms.csv", 
+                   path80_dash="../../../datasets/dash_80ms.csv")
+    
     
     sorted_cols  = ['enq_qdepth1','deq_timedelta1', 'deq_qdepth1',
                     ' enq_qdepth2', ' deq_timedelta2', ' deq_qdepth2',
@@ -96,7 +100,7 @@ try:
             dim=128, 
             batch_size=(28*(k) + 100),  
             clas=1, 
-            model=str('../saved_models/so64_seqlen_'+ str((50*(i) + 50)) + '_hidim_' + str(20*(j)+20) + '_batch_' +  str(28*(k) + 100) + '.pkl'))
+            model=str('../saved_models/so40_seqlen_'+ str((50*(i) + 50)) + '_hidim_' + str(20*(j)+20) + '_batch_' +  str(28*(k) + 100) + '.pkl'))
 except RuntimeError as e:
   print(e)
 

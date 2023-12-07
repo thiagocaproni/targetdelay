@@ -88,7 +88,7 @@ print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
 
 try:
   # Specify an invalid GPU device
-  with tf.device('/device:GPU:1'):
+  with tf.device('/device:GPU:0'):
     for i in range(0,1):
       for j in range(0,3):
         for k in range(0,3):
@@ -99,7 +99,7 @@ try:
             noise_dim=32, 
             dim=128, 
             batch_size=(28*(k) + 100),  
-            clas=1, 
+            clas=2, 
             model=str('../saved_models/so80_seqlen_'+ str((50*(i) + 50)) + '_hidim_' + str(20*(j)+20) + '_batch_' +  str(28*(k) + 100) + '.pkl'))
 except RuntimeError as e:
   print(e)
